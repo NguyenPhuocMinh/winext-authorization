@@ -1,0 +1,3 @@
+.env
+.config.mongo_url.js
+.config.data
