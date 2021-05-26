@@ -1,5 +1,5 @@
 .env
 .config.mongo_url.js
 .config.data
-.node_modules
-.package-lock.json
+node_modules
+package-lock.json
