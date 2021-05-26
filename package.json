@@ -1,5 +1,5 @@
 {
-  "name": "app-authen",
+  "name": "winext-authorization",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "winext": "^1.0.0"
   }
 }
