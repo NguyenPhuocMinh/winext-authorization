@@ -1,6 +1,6 @@
 {
   "name": "winext-authorization",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Authorization with jsonwebtoken and express",
   "homepage": "https://github.com/NguyenPhuocMinh/winext-authorization",
   "main": "index.js",
