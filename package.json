@@ -16,5 +16,12 @@
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
     "winext": "git+https://github.com/NguyenPhuocMinh/winext.git#0ccf2f44d90098bf07f9f4af898503d1c6371674"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
   }
 }
