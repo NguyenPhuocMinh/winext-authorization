@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
-    "winext": "git+https://github.com/NguyenPhuocMinh/winext.git#9d51f82ec0b867cbd072ec2a05031653d2c25ba3"
+    "winext": "git+https://github.com/NguyenPhuocMinh/winext.git#4d7ba27d7a2c2022af741caf2d1c63560d485d88"
   },
   "devDependencies": {
     "eslint": "^7.29.0",
