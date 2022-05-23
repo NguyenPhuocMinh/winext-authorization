@@ -3,15 +3,12 @@
 const winext = require('winext');
 const Promise = winext.require('bluebird');
 const lodash = winext.require('lodash');
-const chalk = winext.require('chalk');
 const jwt = winext.require('jsonwebtoken');
 const { convertSecretKey } = require('../utils/convert-util');
 const loadConfiguration = require('../utils/load-configuration-util');
-const { name, version } = require('../package.json');
 const { get, assign } = lodash;
 
 function TokenGenerator(params = {}) {
-  const loggerFactory = get(params, 'loggerFactory');
   const loggerTracer = get(params, 'loggerTracer');
 
   const configure = loadConfiguration();
@@ -24,28 +21,26 @@ function TokenGenerator(params = {}) {
 
   this.signToken = function ({ payload, options = {} }) {
     try {
-      loggerTracer.debug(chalk.blue.bold(`Load function signToken by ${name}-${version} successfully!`));
-      loggerFactory.debug(`func signToken has been start`, {
+      loggerTracer.debug(`func signToken has been start`, {
         args: {
           payload,
           options,
         },
       });
       const token = jwt.sign(payload, secretPrivate, options);
-      loggerFactory.debug(`func signToken has been end`, {
+      loggerTracer.debug(`func signToken has been end`, {
         args: { token: token },
       });
       return token;
     } catch (err) {
-      loggerFactory.error(`func signToken has error: ${err}`);
+      loggerTracer.error(`func signToken has error: ${err}`);
       return Promise.reject(err);
     }
   };
 
   this.refreshToken = function ({ token, options = {} }) {
     try {
-      loggerTracer.debug(chalk.blue.bold(`Load function refreshToken by ${name}-${version} successfully!`));
-      loggerFactory.debug(`func refreshToken has been start`, {
+      loggerTracer.debug(`func refreshToken has been start`, {
         args: {
           token,
           options,
@@ -61,14 +56,14 @@ function TokenGenerator(params = {}) {
       const jwtSignOptions = assign({}, options, { jwtid: options.jwtid });
       const newToken = jwt.sign(payload, secretPrivate, jwtSignOptions);
 
-      loggerFactory.debug(`func refreshToken has been end`, {
+      loggerTracer.debug(`func refreshToken has been end`, {
         args: {
           newToken: newToken,
         },
       });
       return newToken;
     } catch (err) {
-      loggerFactory.error(`func refreshToken has error: ${err}`);
+      loggerTracer.error(`func refreshToken has error: ${err}`);
       return Promise.reject(err);
     }
   };
