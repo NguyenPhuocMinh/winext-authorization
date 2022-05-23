@@ -5,13 +5,12 @@ const Promise = winext.require('bluebird');
 const lodash = winext.require('lodash');
 const chalk = winext.require('chalk');
 const jwt = winext.require('jsonwebtoken');
-const { convertSecretKey } = require('./convert');
-const loadConfiguration = require('./load-configuration');
+const { convertSecretKey } = require('../utils/convert-util');
+const loadConfiguration = require('../utils/load-configuration-util');
 const { name, version } = require('../package.json');
 const { get, assign } = lodash;
 
 function TokenGenerator(params = {}) {
-  const requestId = get(params, 'requestId');
   const loggerFactory = get(params, 'loggerFactory');
   const loggerTracer = get(params, 'loggerTracer');
 
@@ -27,7 +26,6 @@ function TokenGenerator(params = {}) {
     try {
       loggerTracer.debug(chalk.blue.bold(`Load function signToken by ${name}-${version} successfully!`));
       loggerFactory.debug(`func signToken has been start`, {
-        requestId: `${requestId}`,
         args: {
           payload,
           options,
@@ -35,14 +33,11 @@ function TokenGenerator(params = {}) {
       });
       const token = jwt.sign(payload, secretPrivate, options);
       loggerFactory.debug(`func signToken has been end`, {
-        requestId: `${requestId}`,
         args: { token: token },
       });
       return token;
     } catch (err) {
-      loggerFactory.error(`func signToken has error: ${err}`, {
-        requestId: `${requestId}`,
-      });
+      loggerFactory.error(`func signToken has error: ${err}`);
       return Promise.reject(err);
     }
   };
@@ -51,7 +46,6 @@ function TokenGenerator(params = {}) {
     try {
       loggerTracer.debug(chalk.blue.bold(`Load function refreshToken by ${name}-${version} successfully!`));
       loggerFactory.debug(`func refreshToken has been start`, {
-        requestId: `${requestId}`,
         args: {
           token,
           options,
@@ -68,16 +62,13 @@ function TokenGenerator(params = {}) {
       const newToken = jwt.sign(payload, secretPrivate, jwtSignOptions);
 
       loggerFactory.debug(`func refreshToken has been end`, {
-        requestId: `${requestId}`,
         args: {
           newToken: newToken,
         },
       });
       return newToken;
     } catch (err) {
-      loggerFactory.error(`func refreshToken has error: ${err}`, {
-        requestId: `${requestId}`,
-      });
+      loggerFactory.error(`func refreshToken has error: ${err}`);
       return Promise.reject(err);
     }
   };
