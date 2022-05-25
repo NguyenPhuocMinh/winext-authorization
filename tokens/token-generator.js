@@ -6,6 +6,7 @@ const lodash = winext.require('lodash');
 const jwt = winext.require('jsonwebtoken');
 const { convertSecretKey } = require('../utils/convert-util');
 const loadConfiguration = require('../utils/load-configuration-util');
+const options = require('../conf/options');
 const { get, assign } = lodash;
 
 function TokenGenerator(params = {}) {
@@ -19,42 +20,68 @@ function TokenGenerator(params = {}) {
   const secretPrivate = convertSecretKey(privateKey, 'private');
   const secretPublic = convertSecretKey(publicKey, 'public');
 
-  this.signToken = function ({ payload, options = {} }) {
+  /**
+   * Sign token
+   * @param {*} payload
+   * @param {*} signOptions
+   * @example
+   * const token = tokenGenerator.signToken({
+   *    payload: { username: 'John Doe' },
+   *    signOptions: { audience: 'myaud', issuer: 'myissuer', jwtid: '1', subject: 'user' }
+   * })
+   * @returns
+   */
+  this.signToken = function ({ payload, signOptions = {} }) {
     try {
       loggerTracer.debug(`func signToken has been start`, {
         args: {
           payload,
-          options,
+          signOptions,
         },
       });
-      const token = jwt.sign(payload, secretPrivate, options);
+
+      const opts = assign({}, options.defaultOptions, signOptions);
+      const token = jwt.sign(payload, secretPrivate, opts);
       loggerTracer.debug(`func signToken has been end`, {
         args: { token: token },
       });
       return token;
     } catch (err) {
-      loggerTracer.error(`func signToken has error: ${err}`);
+      loggerTracer.error(`func signToken has error`, {
+        args: err.message,
+      });
       return Promise.reject(err);
     }
   };
 
-  this.refreshToken = function ({ token, options = {} }) {
+  /**
+   * Refresh token
+   * @param {*} token
+   * @param {*} refreshOptions
+   * @example
+   * const refreshToken = tokenGenerator.refreshToken({
+   *    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+   *    refreshOptions: { verify: { audience: 'myaud', issuer: 'myissuer' }, jwtid: '2' }
+   * })
+   * @returns
+   */
+  this.refreshToken = function ({ token, refreshOptions = {} }) {
     try {
       loggerTracer.debug(`func refreshToken has been start`, {
         args: {
           token,
-          options,
+          refreshOptions,
         },
       });
-      const payload = jwt.verify(token, secretPublic, options.verify);
+      const payload = jwt.verify(token, secretPublic, refreshOptions.verify);
 
       delete payload.iat;
       delete payload.exp;
       delete payload.nbf;
       delete payload.jti;
 
-      const jwtSignOptions = assign({}, options, { jwtid: options.jwtid });
-      const newToken = jwt.sign(payload, secretPrivate, jwtSignOptions);
+      const opts = assign({}, refreshOptions, { jwtid: refreshOptions.jwtid });
+      const newToken = jwt.sign(payload, secretPrivate, opts);
 
       loggerTracer.debug(`func refreshToken has been end`, {
         args: {
@@ -64,7 +91,7 @@ function TokenGenerator(params = {}) {
       return newToken;
     } catch (err) {
       loggerTracer.error(`func refreshToken has error`, {
-        args: err,
+        args: err.message,
       });
       return Promise.reject(err);
     }
