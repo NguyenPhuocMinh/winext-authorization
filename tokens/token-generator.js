@@ -63,7 +63,9 @@ function TokenGenerator(params = {}) {
       });
       return newToken;
     } catch (err) {
-      loggerTracer.error(`func refreshToken has error: ${err}`);
+      loggerTracer.error(`func refreshToken has error`, {
+        args: err,
+      });
       return Promise.reject(err);
     }
   };
