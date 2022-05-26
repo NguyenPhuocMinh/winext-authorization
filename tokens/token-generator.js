@@ -4,26 +4,23 @@ const winext = require('winext');
 const Promise = winext.require('bluebird');
 const lodash = winext.require('lodash');
 const jwt = winext.require('jsonwebtoken');
-const { convertSecretKey } = require('../utils/convert-util');
-const loadConfiguration = require('../utils/load-configuration-util');
+const loadSecret = require('../utils/load-secret-util');
 const options = require('../conf/options');
 const { get, assign } = lodash;
 
 function TokenGenerator(params = {}) {
   const loggerTracer = get(params, 'loggerTracer');
 
-  const configure = loadConfiguration();
+  const { secretPrivate, secretPublic } = loadSecret();
 
-  const privateKey = get(configure, 'privateKey');
-  const publicKey = get(configure, 'publicKey');
+  // const privateKey = get(configure, 'privateKey');
+  // const publicKey = get(configure, 'publicKey');
 
-  const secretPrivate = convertSecretKey(privateKey, 'private');
-  const secretPublic = convertSecretKey(publicKey, 'public');
+  // const secretPrivate = convertSecretKey(privateKey, 'private');
+  // const secretPublic = convertSecretKey(publicKey, 'public');
 
   /**
    * Sign token
-   * @param {*} payload
-   * @param {*} signOptions
    * @example
    * const token = tokenGenerator.signToken({
    *    payload: { username: 'John Doe' },
@@ -40,7 +37,7 @@ function TokenGenerator(params = {}) {
         },
       });
 
-      const opts = assign({}, options.defaultOptions, signOptions);
+      const opts = assign({}, options.defaultSignOptions, signOptions);
       const token = jwt.sign(payload, secretPrivate, opts);
       loggerTracer.debug(`func signToken has been end`, {
         args: { token: token },
@@ -56,8 +53,6 @@ function TokenGenerator(params = {}) {
 
   /**
    * Refresh token
-   * @param {*} token
-   * @param {*} refreshOptions
    * @example
    * const refreshToken = tokenGenerator.refreshToken({
    *    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',

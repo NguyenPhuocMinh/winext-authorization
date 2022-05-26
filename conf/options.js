@@ -3,7 +3,7 @@
 const winext = require('winext');
 const uuidUtils = winext.uuidUtils;
 
-const defaultOptions = {
+const defaultSignOptions = {
   algorithm: 'HS256',
   keyid: uuidUtils.v4,
   expiresIn: '30m',
@@ -11,7 +11,7 @@ const defaultOptions = {
 };
 
 const options = {
-  defaultOptions,
+  defaultSignOptions,
 };
 
 module.exports = options;
