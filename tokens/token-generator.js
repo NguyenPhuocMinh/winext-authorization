@@ -24,7 +24,7 @@ function TokenGenerator(params = {}) {
    */
   this.signToken = function ({ payload, signOptions = {} }) {
     try {
-      loggerTracer.debug(`Function signToken has been start`, {
+      loggerTracer.data(`Function signToken has been start`, {
         args: {
           payload,
           signOptions,
@@ -33,7 +33,7 @@ function TokenGenerator(params = {}) {
 
       const opts = assign({}, options.defaultSignOptions, signOptions);
       const token = jwt.sign(payload, secretPrivate, opts);
-      loggerTracer.debug(`Function signToken has been end`, {
+      loggerTracer.data(`Function signToken has been end`, {
         args: { token: token },
       });
       return token;
@@ -56,7 +56,7 @@ function TokenGenerator(params = {}) {
    */
   this.refreshToken = function ({ token, refreshOptions = {} }) {
     try {
-      loggerTracer.debug(`Function refreshToken has been start`, {
+      loggerTracer.data(`Function refreshToken has been start`, {
         args: {
           token,
           refreshOptions,
@@ -69,10 +69,10 @@ function TokenGenerator(params = {}) {
       delete payload.nbf;
       delete payload.jti;
 
-      const opts = assign({}, refreshOptions, { jwtid: refreshOptions.jwtid });
+      const opts = assign({}, options.defaultSignOptions, refreshOptions, { jwtid: refreshOptions.jwtid });
       const newToken = jwt.sign(payload, secretPrivate, opts);
 
-      loggerTracer.debug(`Function refreshToken has been end`, {
+      loggerTracer.data(`Function refreshToken has been end`, {
         args: {
           newToken: newToken,
         },
