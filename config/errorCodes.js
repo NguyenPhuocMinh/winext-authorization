@@ -16,8 +16,8 @@ const errorCodes = {
     returnCode: 2002,
     statusCode: 401,
   },
-  TokenExpired: {
-    message: 'Jwt expired',
+  TokenError: {
+    message: 'Jwt error',
     returnCode: 2003,
     statusCode: 401,
   },

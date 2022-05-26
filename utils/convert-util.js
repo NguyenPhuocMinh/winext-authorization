@@ -17,6 +17,7 @@ const convertSecretKey = (secretKey, mode) => {
       secret += '\n';
     }
     secret += '-----END PUBLIC KEY-----';
+    return secret;
   } else {
     return secret;
   }
