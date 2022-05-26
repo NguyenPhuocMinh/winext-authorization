@@ -13,12 +13,6 @@ function TokenGenerator(params = {}) {
 
   const { secretPrivate, secretPublic } = loadSecret();
 
-  // const privateKey = get(configure, 'privateKey');
-  // const publicKey = get(configure, 'publicKey');
-
-  // const secretPrivate = convertSecretKey(privateKey, 'private');
-  // const secretPublic = convertSecretKey(publicKey, 'public');
-
   /**
    * Sign token
    * @example
@@ -30,7 +24,7 @@ function TokenGenerator(params = {}) {
    */
   this.signToken = function ({ payload, signOptions = {} }) {
     try {
-      loggerTracer.debug(`func signToken has been start`, {
+      loggerTracer.debug(`Function signToken has been start`, {
         args: {
           payload,
           signOptions,
@@ -39,12 +33,12 @@ function TokenGenerator(params = {}) {
 
       const opts = assign({}, options.defaultSignOptions, signOptions);
       const token = jwt.sign(payload, secretPrivate, opts);
-      loggerTracer.debug(`func signToken has been end`, {
+      loggerTracer.debug(`Function signToken has been end`, {
         args: { token: token },
       });
       return token;
     } catch (err) {
-      loggerTracer.error(`func signToken has error`, {
+      loggerTracer.error(`Function signToken has error`, {
         args: err.message,
       });
       return Promise.reject(err);
@@ -62,7 +56,7 @@ function TokenGenerator(params = {}) {
    */
   this.refreshToken = function ({ token, refreshOptions = {} }) {
     try {
-      loggerTracer.debug(`func refreshToken has been start`, {
+      loggerTracer.debug(`Function refreshToken has been start`, {
         args: {
           token,
           refreshOptions,
@@ -78,14 +72,14 @@ function TokenGenerator(params = {}) {
       const opts = assign({}, refreshOptions, { jwtid: refreshOptions.jwtid });
       const newToken = jwt.sign(payload, secretPrivate, opts);
 
-      loggerTracer.debug(`func refreshToken has been end`, {
+      loggerTracer.debug(`Function refreshToken has been end`, {
         args: {
           newToken: newToken,
         },
       });
       return newToken;
     } catch (err) {
-      loggerTracer.error(`func refreshToken has error`, {
+      loggerTracer.error(`Function refreshToken has error`, {
         args: err.message,
       });
       return Promise.reject(err);
