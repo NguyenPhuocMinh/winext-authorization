@@ -24,7 +24,7 @@ function TokenGenerator(params = {}) {
    */
   this.signToken = function ({ payload, signOptions = {} }) {
     try {
-      loggerTracer.data(`Function signToken has been start`, {
+      loggerTracer.info(`Function signToken has been start`, {
         args: {
           payload,
           signOptions,
@@ -33,9 +33,14 @@ function TokenGenerator(params = {}) {
 
       const opts = assign({}, options.defaultSignOptions, signOptions);
       const token = jwt.sign(payload, secretPrivate, opts);
-      loggerTracer.data(`Function signToken has been end`, {
-        args: { token: token },
+
+      const decodedToken = jwt.decode(token, { complete: true });
+      loggerTracer.verbose(`Decoded sign token info`, {
+        args: decodedToken,
       });
+
+      loggerTracer.info(`Function signToken has been end`);
+
       return token;
     } catch (err) {
       loggerTracer.error(`Function signToken has error`, {
@@ -56,7 +61,7 @@ function TokenGenerator(params = {}) {
    */
   this.refreshToken = function ({ token, refreshOptions = {} }) {
     try {
-      loggerTracer.data(`Function refreshToken has been start`, {
+      loggerTracer.info(`Function refreshToken has been start`, {
         args: {
           token,
           refreshOptions,
@@ -72,11 +77,12 @@ function TokenGenerator(params = {}) {
       const opts = assign({}, options.defaultSignOptions, refreshOptions, { jwtid: refreshOptions.jwtid });
       const newToken = jwt.sign(payload, secretPrivate, opts);
 
-      loggerTracer.data(`Function refreshToken has been end`, {
-        args: {
-          newToken: newToken,
-        },
+      const decodedToken = jwt.decode(newToken, { complete: true });
+      loggerTracer.verbose(`Decoded refresh token info`, {
+        args: decodedToken,
       });
+
+      loggerTracer.info(`Function refreshToken has been end`);
       return { newToken, payload };
     } catch (err) {
       loggerTracer.error(`Function refreshToken has error`, {
