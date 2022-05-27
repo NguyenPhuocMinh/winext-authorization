@@ -77,7 +77,7 @@ function TokenGenerator(params = {}) {
           newToken: newToken,
         },
       });
-      return newToken;
+      return { newToken, payload };
     } catch (err) {
       loggerTracer.error(`Function refreshToken has error`, {
         args: err.message,
